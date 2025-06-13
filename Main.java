@@ -1,7 +1,34 @@
+
+import java.util.List;
+
 // Our Semester Project
 
 public class Main{
     public static void main(String[] args) {
+        System.out.println("Welcome to Komplex Gym");
+        DataManager DM = new DataManager();
+        DM.loadMembers();
+        List<Member> memberList = DM.returnMemberList(); // Stores all existing members in a list
+        ConsoleUI CUI = new ConsoleUI();
+
+        outerLoop: while (true) { // outerLoop is just used to reference to this part
+            int userChoice = CUI.userChoice();
+            if(userChoice==1){ // Member
+                int memberChoice = CUI.memberChoice();
+                switch (memberChoice) {
+                    case 1 -> { 
+                        Member member = CUI.getMemberDetails(DM.generateUserID()); // Passes the userID to Console UI to generate a new Member type object from user inputs
+                        DM.saveMember(Member.fromStringCsv(member)); // Use the Data Manager's saveMember method to convert all properties of this member to CSV-style, and append it to the end of the CSV file
+                    }
+                    case 2 -> CUI.memberLogin();
+                    // in Progress
+                    case 3 -> {
+                    }
+                } 
+            }else if(userChoice==2){ // Employee, in Progress
+
+            }
+        }
         
     }
 }
