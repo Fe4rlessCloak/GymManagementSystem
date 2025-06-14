@@ -28,12 +28,53 @@ public class ConsoleUI {
         return selectionChoice;
     } 
 
-    public void memberLogin(){
+    public void memberLogin(DataManager DM){
         System.out.println("We'll need you to enter your credentials for this!");
         System.out.println("What is your username?");
         String userName = input.nextLine();
+        System.out.println("What is your userID?");
+        String userID;
+        while(true){
+            userID = this.input.nextLine();
+            boolean isDigit = true;
+            for(int i = 0; i < userID.length();i++){
+                if(userID.charAt(i)< '0' && userID.charAt(i)>'9'){
+                    isDigit = false;
+                }
+            }
+            if(isDigit==true){
+                break;
+            }
+            System.out.println("Enter a valid input please!");
+        }
+        Member requiredMember = DM.findMember(userID, userName);
+        if(requiredMember==null){
+            System.out.println("The requested user cannot be found");
+        }else {
+            System.out.println("User Found!");
+            System.out.println("Name: " + requiredMember.getMemberName());
+            System.out.println("Contact Number: " + requiredMember.getMemberContactNumber());
+            System.out.println("Email ID: " + requiredMember.getMemberEmailID());
+            System.out.println("Membership Type: " + requiredMember.getMembershipType());
+            System.out.println("Fees Due: " +requiredMember.getMemberFeesDue() );
+            System.out.println("Have you paid your fees: " + requiredMember.getMemberHasPaid());
+            System.out.println("Calories burnt this week: " + requiredMember.getMemberCaloriesBurnt());
+            System.out.println("Hours spent at the gym this week: " + requiredMember.getMemberHoursSpent());
+        }
 
+        
     }
+
+
+     /*String memberName 0; 
+    int memberContactNumber 1;
+    String memberEmailID 2 ;
+    String membershipType 3;
+    int memberFeesDue 4;
+    boolean memberHasPaid 5;
+    int memberCaloriesBurnt 6;
+    int memberHoursSpent 7; */
+
 
 
 
@@ -122,13 +163,5 @@ public class ConsoleUI {
 
 
 
-    /*String memberName 0; 
-    int memberContactNumber 1;
-    String memberEmailID 2 ;
-    String membershipType 3;
-    int memberFeesDue 4;
-    boolean memberHasPaid 5;
-    int memberCaloriesBurnt 6;
-    int memberHoursSpent 7; */
-
+   
 }

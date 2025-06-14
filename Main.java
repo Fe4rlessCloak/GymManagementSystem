@@ -20,7 +20,7 @@ public class Main{
                         Member member = CUI.getMemberDetails(DM.generateUserID()); // Passes the userID to Console UI to generate a new Member type object from user inputs
                         DM.saveMember(Member.fromStringCsv(member)); // Use the Data Manager's saveMember method to convert all properties of this member to CSV-style, and append it to the end of the CSV file
                     }
-                    case 2 -> CUI.memberLogin();
+                    case 2 -> CUI.memberLogin(DM);
                     // in Progress
                     case 3 -> {
                     }

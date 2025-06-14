@@ -18,6 +18,18 @@ public class DataManager {
         this.members = new ArrayList<>(); // Creates a new array list
         nextMemberID = 0;
     }
+
+    // To Read a specific user from the array list
+    public Member findMember(String userID, String userName){
+        String searchId = (userID != null) ? userID.trim() : "";
+        String searchName = (userName != null) ? userName.trim() : "";
+        for(Member member : members){
+            if(member.getMemberName().contains(searchName) || Integer.toString(member.getMemberID()).equals(searchId)){
+                return member;
+            }
+        }
+        return null;
+    }
     // To Load Members into the array list
     public void loadMembers(){
         try{
