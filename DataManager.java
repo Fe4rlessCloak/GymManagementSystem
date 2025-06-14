@@ -10,7 +10,7 @@ import java.util.List;
 
 public class DataManager {
     List<Member> members; // Declares a list of all members in memory
-    String memberFilePath = "C:\\Users\\Abdullah\\Documents\\Project\\GymManagementSystem\\Data\\MemberDeets.csv";
+    String memberFilePath = "Data/MemberDeets.csv";
     File memberFile = new File(memberFilePath);
     int nextMemberID;
     // Constructor
@@ -33,6 +33,7 @@ public class DataManager {
     // To Load Members into the array list
     public void loadMembers(){
         try{
+            int maxUserID = 0;
             BufferedReader BF = new BufferedReader(new FileReader(memberFile));
             String line;
             while ((line = BF.readLine()) != null){
@@ -40,7 +41,11 @@ public class DataManager {
                 if(newMember!=null){
                     members.add(Member.fromCsvString(line));
                 }
+                if(newMember.getMemberID()>maxUserID){
+                    maxUserID = newMember.getMemberID();
+                }
             }
+            nextMemberID = maxUserID+1;
             BF.close();
         }
         catch(IOException e){
@@ -54,7 +59,7 @@ public class DataManager {
         try {
             nextMemberID++;
             BufferedReader BF = new BufferedReader(new FileReader(memberFile));
-            String temporaryFileLocation = "C:\\\\Users\\\\Abdullah\\\\Documents\\\\Project\\\\GymManagementSystem\\\\Data\\\\MemberDeetsTemp.csv";
+            String temporaryFileLocation = "Data/MemberDeetsTemp.csv";
             File temporaryFile = new File(temporaryFileLocation);
             if(temporaryFile.exists()==false){
                 temporaryFile.createNewFile();
