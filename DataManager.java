@@ -24,7 +24,7 @@ public class DataManager {
         String searchId = (userID != null) ? userID.trim() : "";
         String searchName = (userName != null) ? userName.trim() : "";
         for(Member member : members){
-            if(member.getMemberName().contains(searchName) || Integer.toString(member.getMemberID()).equals(searchId)){
+            if(member.getMemberName().contains(searchName) && Integer.toString(member.getMemberID()).equals(searchId)){
                 return member;
             }
         }
