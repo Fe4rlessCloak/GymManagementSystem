@@ -33,6 +33,7 @@ public class DataManager {
     // To Load Members into the array list
     public void loadMembers(){
         try{
+            members.clear();
             int maxUserID = 0;
             BufferedReader BF = new BufferedReader(new FileReader(memberFile));
             String line;
@@ -53,9 +54,20 @@ public class DataManager {
         }
     
     }
-     
+    public void updateDatabase(){
+        try {
+            BufferedReader BF = new BufferedReader(new FileReader(memberFile));
+            String line;
+        } catch (Exception e) {
+        }
+    }
 
-    public void saveMember(String memberData){
+    public void saveMember(String memberData){  // Puts the new member in the array-list
+        Member memberToAdd = Member.fromCsvString(memberData);
+        members.add(memberToAdd);
+        updateMembers();
+
+        /* 
         try {
             nextMemberID++;
             BufferedReader BF = new BufferedReader(new FileReader(memberFile));
@@ -81,8 +93,37 @@ public class DataManager {
         } catch (IOException e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
         }
+        loadMembers();
+        */
+    }
+    public void updateMembers(){ // Updates the CSV Database with the updated in-memory Array List
+        try {
+            String temporaryFileLocation = "Data/MemberDeetsTemp.csv";
+            File temporaryFile = new File(temporaryFileLocation);
+            if(temporaryFile.exists()==false){
+                temporaryFile.createNewFile();
+            }
+            BufferedWriter BR = new BufferedWriter(new FileWriter(temporaryFile));
+            String line;
+            for(Member memberToFind:members){
+                BR.write(Member.fromStringCsv(memberToFind));
+                BR.newLine();
+            }
+            BR.close();
+            if(memberFile.exists()){
+                memberFile.delete();
+                temporaryFile.renameTo(memberFile);
+            }
+        } catch (IOException e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+        }
         
     }
+
+
+
+
+
     public int generateUserID(){
         return nextMemberID;
     }
@@ -105,7 +146,24 @@ public class DataManager {
         return maxIDFound;
     } */
     
-    
+    public float recordWorkout(Member member, String workoutType, int duration, String intensity){
+        int cardioCalories = 5;
+        int strengthCalories = 4;
+        int yogaCalories = 3;
+        float caloriesBurnt = 0;
+        char charWorkoutType = workoutType.charAt(0);
+        switch(charWorkoutType){
+            case '1'-> {caloriesBurnt = duration*cardioCalories;}
+            case '2'-> {caloriesBurnt = duration*strengthCalories;}
+            case '3'-> {caloriesBurnt = duration*yogaCalories;}
+        }
+        switch(intensity.charAt(0)){
+            case '1'-> {caloriesBurnt= caloriesBurnt * 0.8f;}
+            case '2'-> {caloriesBurnt= caloriesBurnt * 1.1f;}
+            case '3'-> {caloriesBurnt= caloriesBurnt * 1.3f;}
+        }
+        return caloriesBurnt;
+    }
     public List<Member> returnMemberList(){
         return this.members;
     }

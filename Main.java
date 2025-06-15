@@ -21,8 +21,11 @@ public class Main{
                         DM.saveMember(Member.fromStringCsv(member)); // Use the Data Manager's saveMember method to convert all properties of this member to CSV-style, and append it to the end of the CSV file
                     }
                     case 2 -> CUI.memberLogin(DM);
-                    // in Progress
                     case 3 -> {
+                        CUI.simulateWorkout(DM);
+                    }
+                    case 4 -> {
+                        break;
                     }
                 } 
             }else if(userChoice==2){ // Employee, in Progress

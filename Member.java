@@ -54,6 +54,7 @@ public class Member {
     }
 
     // Setters
+
     public void setMemberID(int memberID){
         this.memberID = memberID;
     }
@@ -67,13 +68,13 @@ public class Member {
         this.memberCaloriesBurnt = calories; // Manually set calories (Not used manually)
     }
     public void setMemberHoursSpent(int hours){
-        this.memberHoursSpent = hours; // Manually set calories (Not used manually)
+        this.memberHoursSpent = hours; // Manually set calories (Not used)
     }
     public void increaseMemberCaloriesBurnt(int caloriesBurnt){
         this.memberCaloriesBurnt += caloriesBurnt; // Increases the number of calories you have burnt by variable 'caloriesBurnt'
     }
-    public void increasMemberHoursSpent(int hoursSpent){
-        this.memberHoursSpent += memberHoursSpent; // Increases the number of hours you have spent by variable 'hoursSpent'
+    public void increaseMemberHoursSpent(int hoursSpent){
+        this.memberHoursSpent += hoursSpent; // Increases the number of hours you have spent by variable 'hoursSpent'
     }
 
     public static Member fromCsvString(String line){  // Static method that basically reads a CSV line and creates a member with those specific details and returns it to the calling method

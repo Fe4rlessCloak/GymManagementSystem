@@ -56,10 +56,12 @@ public class ConsoleUI {
             System.out.println("Contact Number: " + requiredMember.getMemberContactNumber());
             System.out.println("Email ID: " + requiredMember.getMemberEmailID());
             System.out.println("Membership Type: " + requiredMember.getMembershipType());
-            System.out.println("Fees Due: " +requiredMember.getMemberFeesDue() );
+            System.out.println("Fees Due: " +requiredMember.getMemberFeesDue() +" Rupees" );
             System.out.println("Have you paid your fees: " + requiredMember.getMemberHasPaid());
-            System.out.println("Calories burnt this week: " + requiredMember.getMemberCaloriesBurnt());
-            System.out.println("Hours spent at the gym this week: " + requiredMember.getMemberHoursSpent());
+            System.out.println("Calories burnt this week: " + requiredMember.getMemberCaloriesBurnt() + " calories");
+            int memberHoursSpent = requiredMember.getMemberHoursSpent() / 60;
+            int memberMinutesSpent = (requiredMember.getMemberHoursSpent() / 60) % 60;
+            System.out.println("Time spent at the gym this week: " + memberHoursSpent + " hours " + memberMinutesSpent + " minutes");
         }
 
         
@@ -80,19 +82,89 @@ public class ConsoleUI {
 
     public int memberChoice(){
         int memberChoice;
-        System.out.println("What do you wish to perform?\n1) Register\n2) View your stats\n3) Exit to previous screen");
+        System.out.println("What do you wish to perform?\n1) Register\n2) View your stats\n3) Workout\n4) Exit to previous screen");
         while (true) { 
             memberChoice = this.input.nextInt();
             this.input.nextLine();
-            if(memberChoice==1 || memberChoice ==2 || memberChoice ==3){
+            if(memberChoice==1 || memberChoice ==2 || memberChoice ==3 || memberChoice == 4){
                 break;
             }
             System.out.println("Kindly select a valid option!");
         }
         return memberChoice;
     }
+    
+    
 
 
+
+    public void simulateWorkout(DataManager DM){
+        System.out.println("We'll need you to enter your credentials for this!");
+        System.out.println("What is your username?");
+        String userName = input.nextLine();
+        System.out.println("What is your userID?");
+        String userID;
+        while(true){
+            userID = this.input.nextLine();
+            boolean isDigit = true;
+            for(int i = 0; i < userID.length();i++){
+                if(userID.charAt(i)< '0' && userID.charAt(i)>'9'){
+                    isDigit = false;
+                }
+            }
+            if(isDigit==true){
+                break;
+            }
+            System.out.println("Enter a valid input please!");
+        }
+        Member member = DM.findMember(userID, userName);
+        if(member!=null){
+            String workoutChoice;
+            System.out.println("Welcome " + member.getMemberName());
+            System.out.println("Kindly select your workout type:\n1) Cardio\n2) Strength\n3) Yoga");
+            while (true) { 
+                workoutChoice = this.input.nextLine();
+                if(workoutChoice.equals("1") || workoutChoice.equals("2") || workoutChoice.equals("3")){
+                    break;
+                }
+                System.out.println("Kindly enter a valid input!");
+            }
+            System.out.println("Kindly select the intensity\n1) Low\n2) Medium\n3) High");
+            String workoutIntensity;
+            while (true) { 
+                workoutIntensity = this.input.nextLine();
+                if(workoutIntensity.equals("1") || workoutIntensity.equals("2") || workoutIntensity.equals("3")){
+                    break;
+                }
+                System.out.println("Kindly enter a valid input");
+            }
+            int workoutDuration;
+            System.out.println("How long do you wish to workout for in minutes?\n");
+            while (true) { 
+                try {
+                    workoutDuration = this.input.nextInt();
+                    this.input.nextLine();
+                    if(workoutDuration>200){
+                        System.out.println("While exercising it's important, it's essential you don't overdo it.");
+                    }
+                    if(workoutDuration>400){
+                        System.out.println("Kindly enter a valid entry between 1 and 500 (minutes)");
+                        continue;
+                    }
+                    break;
+                }catch (InputMismatchException e) {
+                    System.out.println("Kindly enter an integer value only");
+                }
+            }
+            float caloriesBurnt = DM.recordWorkout(member,workoutChoice,workoutDuration,workoutIntensity);
+            System.out.println("You've succesfully burnt " + caloriesBurnt + " calories in " + workoutDuration + " minutes");
+            member.increaseMemberCaloriesBurnt((int)caloriesBurnt);
+            member.increaseMemberHoursSpent(workoutDuration);
+            DM.updateMembers();
+        }else{
+            System.out.println("The required user cannot be found");
+        }
+    }
 
     // Method that receives the sequential userID from Main, takes user input, and returns a new Member type object
     public Member getMemberDetails(int memberID){
