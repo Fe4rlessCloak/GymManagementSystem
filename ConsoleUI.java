@@ -94,6 +94,36 @@ public class ConsoleUI {
         return memberChoice;
     }
     
+    public boolean employeeLogin(DataManager DM){
+        
+        int employeeID;
+        String employeePassword;
+        System.out.println("Please enter your employee credentials!");
+        System.out.println("Enter your employee ID");
+        while(true){
+            try {
+                employeeID = this.input.nextInt();
+                this.input.nextLine();
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("Kindly enter an integer value");
+            }
+            
+        }
+        System.out.println("Enter your employee password");
+        employeePassword = this.input.nextLine();
+        Employee requiredEmployee = DM.findEmployee(Integer.toString(employeeID), employeePassword);
+        if(requiredEmployee==null){
+            System.out.println("Incorrect credentials!");
+            return false;   
+        }else {
+            System.out.println("Welcome " + requiredEmployee.getEmployeeName());
+
+        }
+        return true;    
+        
+        
+    }
     
 
 

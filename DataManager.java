@@ -10,13 +10,23 @@ import java.util.List;
 
 public class DataManager {
     List<Member> members; // Declares a list of all members in memory
+    List<Employee> employees; // Declares a list of all employees in memory
+
+    String employeeFilePath = "Data/EmployeeAuth.csv";
+    File employeeFile = new File(employeeFilePath);
+
     String memberFilePath = "Data/MemberDeets.csv";
     File memberFile = new File(memberFilePath);
+
+    int nextemployeeID;
     int nextMemberID;
     // Constructor
     public DataManager(){ 
         this.members = new ArrayList<>(); // Creates a new array list
         nextMemberID = 0;
+
+        this.employees = new ArrayList<>(); // Creates a new array list for employees
+        nextemployeeID = 0;
     }
 
     // To Read a specific user from the array list
@@ -29,6 +39,43 @@ public class DataManager {
             }
         }
         return null;
+    }
+
+
+
+
+    public Employee findEmployee(String employeeID, String employeePassword){
+        String searchId = (employeeID != null) ? employeeID.trim() : "";
+        String searchPassword = (employeePassword != null) ? employeePassword.trim() : "";
+        for(Employee employee : employees){
+            if(Integer.toString(employee.getEmployeeID()).equals(searchId) && employee.getEmployeePassword().equals(searchPassword)){
+                return employee;
+            }
+        }
+        return null;
+    }
+
+
+    public void loadEmployees(){
+        try {
+            employees.clear();
+            int maxEmployeeID = 0;
+            BufferedReader BF = new BufferedReader(new FileReader(employeeFile));
+            String line;
+            while ((line = BF.readLine()) != null){
+                Employee newEmployee = Employee.fromCsvString(line);
+                if(newEmployee!=null){
+                    employees.add(Employee.fromCsvString(line));
+                }
+                if(newEmployee.getEmployeeID()>maxEmployeeID){
+                    maxEmployeeID = newEmployee.getEmployeeID();
+                }
+            }
+            nextemployeeID = maxEmployeeID+1;
+            BF.close();
+        } catch(IOException e){
+            System.out.println(Arrays.toString(e.getStackTrace()));
+        }
     }
     // To Load Members into the array list
     public void loadMembers(){
@@ -54,19 +101,14 @@ public class DataManager {
         }
     
     }
-    public void updateDatabase(){
-        try {
-            BufferedReader BF = new BufferedReader(new FileReader(memberFile));
-            String line;
-        } catch (Exception e) {
-        }
-    }
+
+    
 
     public void saveMember(String memberData){  // Puts the new member in the array-list
         Member memberToAdd = Member.fromCsvString(memberData);
         members.add(memberToAdd);
         updateMembers();
-
+    }
         /* 
         try {
             nextMemberID++;
@@ -95,7 +137,6 @@ public class DataManager {
         }
         loadMembers();
         */
-    }
     public void updateMembers(){ // Updates the CSV Database with the updated in-memory Array List
         try {
             String temporaryFileLocation = "Data/MemberDeetsTemp.csv";

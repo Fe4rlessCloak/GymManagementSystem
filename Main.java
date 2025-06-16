@@ -8,6 +8,7 @@ public class Main{
         System.out.println("Welcome to Komplex Gym");
         DataManager DM = new DataManager();
         DM.loadMembers();
+        DM.loadEmployees();
         List<Member> memberList = DM.returnMemberList(); // Stores all existing members in a list
         ConsoleUI CUI = new ConsoleUI();
 
@@ -29,7 +30,7 @@ public class Main{
                     }
                 } 
             }else if(userChoice==2){ // Employee, in Progress
-
+                boolean employeeLoginStatus = CUI.employeeLogin(DM); 
             }
         }
         
