@@ -13,17 +13,31 @@ public class ConsoleUI {
     }
     public void simulateMembers(DataManager DM, SimulationManager SM){
         System.out.println(ConsoleColors.applyBoldColor(ConsoleColors.PURPLE, "\n--- WELCOME TO MEMBER SIMULATION ---"));
-        System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "Press (1) to start the simulation with one-hour time-steps"));
+        
         int selectionChoice;
         while (true) { 
+            System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "Press (1) to start the simulation with one-hour time-steps\nPress (2) to stop the simulation\nPress (3) to exit"));
             try {
                 selectionChoice = this.input.nextInt();
                 this.input.nextLine();
                 if(selectionChoice==1){
-                    break;
+                    SM.advanceTime(DM);
+                    System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "Advancing Time.........."));
+                    try {
+                        Thread.sleep(1500);
+                    } catch (InterruptedException e) {
+                        System.out.println("Error");
+                        this.input.nextLine();
+                    }
+                    printTable(DM.members);
                 }
-                if(selectionChoice!=1){
+                if(selectionChoice==2){
                     System.out.println(ConsoleColors.applyColor(ConsoleColors.BRIGHT_WHITE, "\n--- EXITING SIMULATION ---"));
+                    SM.stopSimulation(DM);
+                    DM.updateMembers();
+                    return;
+                }
+                if(selectionChoice==3){
                     return;
                 }
                 System.out.println("Kindly select a valid option!");
@@ -32,14 +46,7 @@ public class ConsoleUI {
                 this.input.nextLine();
             }
         }
-        SM.advanceTime(DM);
-        System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "Advancing Time.........."));
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            System.out.println("Error");
-        }
-        printTable(DM.members);
+        
 
 
     }
@@ -49,8 +56,7 @@ public class ConsoleUI {
         System.out.println(ConsoleColors.applyBoldColor(ConsoleColors.PURPLE, "\n--- EMPLOYEE MAIN MENU ---"));
         System.out.println(ConsoleColors.applyColor(ConsoleColors.BRIGHT_WHITE, "What do you wish to perform?"));
         System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "  1) Manage Members"));
-        System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "  2) See Gym Inventory"));
-        System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "  3) Simulation"));
+        System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "  2) Simulation"));
         System.out.println(ConsoleColors.applyColor(ConsoleColors.BRIGHT_RED, "  0) Exit Application")); // Added exit option for clarity
         System.out.println(ConsoleColors.applyBoldColor(ConsoleColors.PURPLE, "--------------------------"));
 
@@ -58,10 +64,10 @@ public class ConsoleUI {
             System.out.print(ConsoleColors.applyColor(ConsoleColors.YELLOW, "Enter your choice (1-3 or 0 to Exit): "));
             employeeChoice = this.input.nextLine();
 
-            if (employeeChoice.equals("1") || employeeChoice.equals("2") || employeeChoice.equals("3") || employeeChoice.equals("0")) {
+            if (employeeChoice.equals("1") || employeeChoice.equals("2") || employeeChoice.equals("0")) {
                 break;
             }
-            System.out.println(ConsoleColors.applyColor(ConsoleColors.RED, "Invalid choice. Please enter a number from the menu (1, 2, 3, or 0)."));
+            System.out.println(ConsoleColors.applyColor(ConsoleColors.RED, "Invalid choice. Please enter a number from the menu (1, 2, or 0)."));
             this.input.nextLine(); 
         }
         return Integer.parseInt(employeeChoice);
@@ -468,7 +474,6 @@ public class ConsoleUI {
             System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "  1) Cardio"));
             System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "  2) Strength Training"));
             System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "  3) Yoga"));
-            System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "  4) Running")); // Added Running as it was in DataManager's logic
             System.out.println(ConsoleColors.applyBoldColor(ConsoleColors.BLUE, "------------------------"));
             while (true) { 
                 workoutChoice = this.input.nextLine();

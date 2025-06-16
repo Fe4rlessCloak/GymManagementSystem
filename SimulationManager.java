@@ -13,7 +13,20 @@ public class SimulationManager {
         simulateWorkout(DM);
         DM.updateMembers();
     }
-
+    public void stopSimulation(DataManager DM){
+        List<Member> allMembers = DM.members;
+        currentSimulatedTime += minutesPerSimulationStep;
+        for(Member member:allMembers){
+            if(member.getActiveStatus()==true){
+                long durationOfWorkout = currentSimulatedTime - member.getLastAcitivityTimestamp();
+                member.increaseMemberHoursSpent((int)durationOfWorkout);
+                int caloriesBurnt = (int) (durationOfWorkout * (random.nextInt(5) + 3)); 
+                member.increaseMemberCaloriesBurnt(caloriesBurnt);
+                System.out.println(ConsoleColors.applyColor(ConsoleColors.BRIGHT_MAGENTA, "  - " + member.getMemberName() + " (ID: " + member.getMemberID() + ") ended workout after " + durationOfWorkout + " mins. Burned " + caloriesBurnt + " cal."));
+                member.setActive(false);
+            }
+        }
+    }
     public void simulateWorkout(DataManager DM){
         List<Member> allMembers = DM.members;
 

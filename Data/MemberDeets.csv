@@ -1,7 +1,7 @@
-1,Abdullah,0321-1234567,abdullah@abdullah.com,2,0,true,3059,360,true,300
-2,Ali,0312-1234567,ali@ali.com,1,0,true,0,0,true,180
-3,Saif,0321-1234567,saif@saif.com,1,0,true,2885,730,false,120
-4,Usman,0312-1234567,usman@usman.com,2,1000,false,240,60,true,300
-5,Areeb,0321-1234567,Areeb@areeb.com,2,0,true,1790,280,true,60
+1,Abdullah,0321-1234567,abdullah@abdullah.com,2,0,true,3059,360,false,300
+2,Ali,0312-1234567,ali@ali.com,1,0,true,780,120,false,300
+3,Saif,0321-1234567,saif@saif.com,1,0,true,3665,850,false,300
+4,Usman,0312-1234567,usman@usman.com,2,1000,false,960,180,false,180
+5,Areeb,0321-1234567,Areeb@areeb.com,2,0,true,2390,400,false,180
 6,Abdullah Khan,0321-1234567,abdullah@abdullah.com,2,0,true,4319,600,false,240
-7,Arif,0321-1234567,arif@arif.com,2,0,true,390,60,true,300
+7,Arif,0321-1234567,arif@arif.com,2,0,true,1110,240,false,120

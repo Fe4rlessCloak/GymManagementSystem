@@ -45,7 +45,7 @@ public class Main{
                                 CUI.displayAllMembersTable(DM);
                                 CUI.menuForManagingMembers(DM);
                             }
-                            case 3 -> {
+                            case 2 -> {
                                 CUI.simulateMembers(DM,SM);
                             }
 
@@ -55,6 +55,7 @@ public class Main{
                 }
             }
             if(userChoice==3){
+                DM.updateMembers();
                 break;
             }
         }

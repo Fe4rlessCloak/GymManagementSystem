@@ -109,7 +109,7 @@ public class Member {
         boolean memberHasPaid = Boolean.parseBoolean(memberDetails[6]);
         int memberCaloriesBurnt = Integer.parseInt(memberDetails[7]);
         int memberHoursSpent = Integer.parseInt(memberDetails[8]);
-        boolean memberActiveStatus = Boolean.getBoolean(memberDetails[9]);
+        boolean memberActiveStatus = Boolean.parseBoolean(memberDetails[9]);
         int lastActivityTimeStamp = Integer.parseInt(memberDetails[10]);
 
         Member member = new Member(memberName, memberContactNumber, memberEmailID, membershipType);
