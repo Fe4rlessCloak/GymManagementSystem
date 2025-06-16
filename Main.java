@@ -9,6 +9,7 @@ public class Main{
         DataManager DM = new DataManager();
         DM.loadMembers();
         DM.loadEmployees();
+        SimulationManager SM = new SimulationManager();
         List<Member> memberList = DM.returnMemberList(); // Stores all existing members in a list
         ConsoleUI CUI = new ConsoleUI();
 
@@ -44,6 +45,10 @@ public class Main{
                                 CUI.displayAllMembersTable(DM);
                                 CUI.menuForManagingMembers(DM);
                             }
+                            case 3 -> {
+                                CUI.simulateMembers(DM,SM);
+                            }
+
                         }
                     }
                     

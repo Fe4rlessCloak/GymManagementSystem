@@ -11,7 +11,38 @@ public class ConsoleUI {
     public ConsoleUI(){
         
     }
+    public void simulateMembers(DataManager DM, SimulationManager SM){
+        System.out.println(ConsoleColors.applyBoldColor(ConsoleColors.PURPLE, "\n--- WELCOME TO MEMBER SIMULATION ---"));
+        System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "Press (1) to start the simulation with one-hour time-steps"));
+        int selectionChoice;
+        while (true) { 
+            try {
+                selectionChoice = this.input.nextInt();
+                this.input.nextLine();
+                if(selectionChoice==1){
+                    break;
+                }
+                if(selectionChoice!=1){
+                    System.out.println(ConsoleColors.applyColor(ConsoleColors.BRIGHT_WHITE, "\n--- EXITING SIMULATION ---"));
+                    return;
+                }
+                System.out.println("Kindly select a valid option!");
+            } catch (InputMismatchException e) {
+                System.out.println(ConsoleColors.applyColor(ConsoleColors.RED, "Invalid input. Please enter a number (1 or 2)."));
+                this.input.nextLine();
+            }
+        }
+        SM.advanceTime(DM);
+        System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "Advancing Time.........."));
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            System.out.println("Error");
+        }
+        printTable(DM.members);
 
+
+    }
     public int employeeMenu() {
         
         String employeeChoice;
@@ -19,7 +50,7 @@ public class ConsoleUI {
         System.out.println(ConsoleColors.applyColor(ConsoleColors.BRIGHT_WHITE, "What do you wish to perform?"));
         System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "  1) Manage Members"));
         System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "  2) See Gym Inventory"));
-        System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "  3) Financial Situation"));
+        System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "  3) Simulation"));
         System.out.println(ConsoleColors.applyColor(ConsoleColors.BRIGHT_RED, "  0) Exit Application")); // Added exit option for clarity
         System.out.println(ConsoleColors.applyBoldColor(ConsoleColors.PURPLE, "--------------------------"));
 
@@ -94,7 +125,7 @@ public class ConsoleUI {
             System.out.println(ConsoleColors.applyColor(ConsoleColors.WHITE, "Contact Number: " + requiredMember.getMemberContactNumber()));
             System.out.println(ConsoleColors.applyColor(ConsoleColors.WHITE, "Email ID: " + requiredMember.getMemberEmailID()));
             String memberShipType = "";
-            if(requiredMember.getMembershipType()=="1"){
+            if(requiredMember.getMembershipType().equals("1")){
                 memberShipType = "Standard";
             }else {
                 memberShipType = "Premium";
@@ -212,7 +243,6 @@ public class ConsoleUI {
         System.out.println(ConsoleColors.applyColor(ConsoleColors.BRIGHT_WHITE, "  6) Filter by Calories Burnt"));
         System.out.println(ConsoleColors.applyColor(ConsoleColors.BRIGHT_WHITE, "  7) Filter by Minutes Spent This Week"));
         System.out.println(ConsoleColors.applyColor(ConsoleColors.BRIGHT_RED, "  8) Delete Member")); // Highlight delete in red
-        System.out.println(ConsoleColors.applyColor(ConsoleColors.BRIGHT_WHITE, "  9) View All Members (Full Table)")); // Added this for convenience in previous response
         System.out.println(ConsoleColors.applyColor(ConsoleColors.BRIGHT_BLACK, "  0) Back to Main Menu")); // Highlight exit in a dimmer color
         System.out.println(ConsoleColors.applyBoldColor(ConsoleColors.BLUE, "------------------------------")); // Separator line
 
@@ -363,13 +393,13 @@ public class ConsoleUI {
         int paidWidth = 8;
         int caloriesWidth = 12;
         int hoursWidth = 10;
-
+        int activeStatus = 7;
         // Print table header
-        String headerFormat = "| %-" + idWidth + "s | %-" + nameWidth + "s | %-" + typeWidth + "s | %" + feesWidth + "s | %-" + paidWidth + "s | %" + caloriesWidth + "s | %" + hoursWidth + "s |%n";
-        String separator = "+-------+" + "-".repeat(nameWidth + 2) + "+" + "-".repeat(typeWidth + 2) + "+" + "-".repeat(feesWidth + 2) + "+" + "-".repeat(paidWidth + 2) + "+" + "-".repeat(caloriesWidth + 2) + "+" + "-".repeat(hoursWidth + 2) + "+%n";
+        String headerFormat = "| %-" + idWidth + "s | %-" + nameWidth + "s | %-" + typeWidth + "s | %" + feesWidth + "s | %-" + paidWidth + "s | %" + caloriesWidth + "s | %" + hoursWidth + "s |%" + activeStatus + "s | %n";
+        String separator = "+-------+" + "-".repeat(nameWidth + 2) + "+" + "-".repeat(typeWidth + 2) + "+" + "-".repeat(feesWidth + 2) + "+" + "-".repeat(paidWidth + 2) + "+" + "-".repeat(caloriesWidth + 2) + "+" + "-".repeat(hoursWidth + 2) + "+" + "-".repeat(activeStatus+2) + "+%n";
 
         System.out.printf(separator);
-        System.out.printf(headerFormat, "ID", "Name", "Type", "Fees Due", "Paid?", "Calories", "Minutes");
+        System.out.printf(headerFormat, "ID", "Name", "Type", "Fees Due", "Paid?", "Calories", "Minutes","Active");
         System.out.printf(separator);
 
         // Print each member's data
@@ -382,7 +412,8 @@ public class ConsoleUI {
                 String.valueOf(member.getMemberFeesDue()),
                 (member.getMemberHasPaid() ? "Yes" : "No"), // Display "Yes" or "No"
                 String.valueOf(member.getMemberCaloriesBurnt()),
-                String.valueOf(member.getMemberHoursSpent())
+                String.valueOf(member.getMemberHoursSpent()),
+                String.valueOf(member.getActiveStatus())
             );
         }
         System.out.printf(separator);
@@ -409,11 +440,13 @@ public class ConsoleUI {
 
 
     public void simulateWorkout(DataManager DM){
-        System.out.println("We'll need you to enter your credentials for this!");
-        System.out.println("What is your username?");
+        System.out.println(ConsoleColors.applyBoldColor(ConsoleColors.BLUE, "\n--- RECORD YOUR WORKOUT ---"));
+        System.out.println(ConsoleColors.applyColor(ConsoleColors.WHITE, "We'll need you to confirm your identity for this!"));
+        System.out.print(ConsoleColors.applyColor(ConsoleColors.CYAN, "What is your username? "));
         String userName = input.nextLine();
-        System.out.println("What is your userID?");
+        
         String userID;
+        System.out.print(ConsoleColors.applyColor(ConsoleColors.CYAN, "What is your User ID? "));
         while(true){
             userID = this.input.nextLine();
             boolean isDigit = true;
@@ -425,28 +458,37 @@ public class ConsoleUI {
             if(isDigit==true){
                 break;
             }
-            System.out.println("Enter a valid input please!");
+             System.out.print(ConsoleColors.applyColor(ConsoleColors.RED, "Enter a valid input please"));
         }
         Member member = DM.findMember(userID, userName);
         if(member!=null){
             String workoutChoice;
-            System.out.println("Welcome " + member.getMemberName());
-            System.out.println("Kindly select your workout type:\n1) Cardio\n2) Strength\n3) Yoga");
+            System.out.println(ConsoleColors.applyBoldColor(ConsoleColors.GREEN, "\nWelcome, " + member.getMemberName() + "! Let's record your workout."));
+            System.out.println(ConsoleColors.applyColor(ConsoleColors.BRIGHT_WHITE, "\nKindly select your workout type:"));
+            System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "  1) Cardio"));
+            System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "  2) Strength Training"));
+            System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "  3) Yoga"));
+            System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "  4) Running")); // Added Running as it was in DataManager's logic
+            System.out.println(ConsoleColors.applyBoldColor(ConsoleColors.BLUE, "------------------------"));
             while (true) { 
                 workoutChoice = this.input.nextLine();
                 if(workoutChoice.equals("1") || workoutChoice.equals("2") || workoutChoice.equals("3")){
                     break;
                 }
-                System.out.println("Kindly enter a valid input!");
+                System.out.println(ConsoleColors.applyColor(ConsoleColors.RED, "Invalid workout type. Please enter 1, 2, 3, or 4."));
             }
-            System.out.println("Kindly select the intensity\n1) Low\n2) Medium\n3) High");
+            System.out.println(ConsoleColors.applyColor(ConsoleColors.BRIGHT_WHITE, "\nKindly select the intensity:"));
+            System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "  1) Low"));
+            System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "  2) Medium"));
+            System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "  3) High"));
+            System.out.println(ConsoleColors.applyBoldColor(ConsoleColors.BLUE, "----------------------"));
             String workoutIntensity;
             while (true) { 
                 workoutIntensity = this.input.nextLine();
                 if(workoutIntensity.equals("1") || workoutIntensity.equals("2") || workoutIntensity.equals("3")){
                     break;
                 }
-                System.out.println("Kindly enter a valid input");
+                System.out.println(ConsoleColors.applyColor(ConsoleColors.RED, "Invalid intensity. Please enter 1, 2, or 3."));
             }
             int workoutDuration;
             System.out.println("How long do you wish to workout for in minutes?\n");
@@ -455,33 +497,35 @@ public class ConsoleUI {
                     workoutDuration = this.input.nextInt();
                     this.input.nextLine();
                     if(workoutDuration>200){
-                        System.out.println("While exercising it's important, it's essential you don't overdo it.");
+                         System.out.println(ConsoleColors.applyColor(ConsoleColors.YELLOW, "While exercising is important, it's essential you don't overdo it."));
                     }
-                    if(workoutDuration>400){
-                        System.out.println("Kindly enter a valid entry between 1 and 500 (minutes)");
+                    if(workoutDuration>400 || workoutDuration <0){
+                        System.out.println(ConsoleColors.applyColor(ConsoleColors.RED, "Kindly enter a valid duration between 1 and 500 minutes."));
                         continue;
                     }
                     break;
                 }catch (InputMismatchException e) {
-                    System.out.println("Kindly enter an integer value only");
+                    System.out.println(ConsoleColors.applyColor(ConsoleColors.RED, "Kindly enter an integer."));
                     this.input.nextLine();
                 }
             }
             float caloriesBurnt = DM.recordWorkout(member,workoutChoice,workoutDuration,workoutIntensity);
-            System.out.println("You've succesfully burnt " + caloriesBurnt + " calories in " + workoutDuration + " minutes");
+            System.out.println(ConsoleColors.applyColor(ConsoleColors.GREEN, "You've burnt " + caloriesBurnt + " calories in " + workoutDuration + " minutes."));
             member.increaseMemberCaloriesBurnt((int)caloriesBurnt);
             member.increaseMemberHoursSpent(workoutDuration);
             DM.updateMembers();
         }else{
-            System.out.println("The required user cannot be found");
+            System.out.println(ConsoleColors.applyBoldColor(ConsoleColors.RED, "The user with the provided credentials cannot be found."));
         }
     }
 
     // Method that receives the sequential userID from Main, takes user input, and returns a new Member type object
     public Member getMemberDetails(int memberID){
-        System.out.println("Enter the user's name");
+        System.out.println(ConsoleColors.applyBoldColor(ConsoleColors.BLUE, "\n--- NEW MEMBER REGISTRATION ---"));
+        System.out.println(ConsoleColors.applyColor(ConsoleColors.WHITE, "Please provide the following details for the new member"));
+        System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "Enter Member's Name:"));
         String memberName = this.input.nextLine();
-        System.out.println("Enter your contact number");
+        System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "Enter Contact Number (e.g., 03XX-XXXXXXX or +923XX-XXXXXXX):"));
         String memberContactNumber;
         while (true) { 
             memberContactNumber = this.input.nextLine();
@@ -491,9 +535,9 @@ public class ConsoleUI {
             if(memberContactNumber!=null && phoneMatcher.matches() == true){
                 break;
             }
-            System.out.println("Enter a valid phone number please!");
+            System.out.println(ConsoleColors.applyColor(ConsoleColors.RED, "Invalid phone number format. Please enter a valid 11-digit Pakistani number (e.g., 03XX-XXXXXXX)."));
         }
-        System.out.println("Enter your email address");
+        System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "Enter your email address"));
         boolean isEmailValid = false;
 
         // Use regex to check if the entered email is correct or not
@@ -506,20 +550,22 @@ public class ConsoleUI {
             if(memberEmailID!=null && emailMatcher.matches()==true){
                 break;
             }
-            System.out.println("Enter a valid email address please!");
+            System.out.println(ConsoleColors.applyColor(ConsoleColors.RED, "Invalid email address format. Please try again."));
         }
         String membershipType;
         while (true) { 
-            System.out.println("Select the membership type\nStandard (Enter 1) or Premium (Enter 2)");
+            System.out.println(ConsoleColors.applyColor(ConsoleColors.BRIGHT_WHITE, "\nSelect the Membership Type:"));
+            System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "  1) Standard"));
+            System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "  2) Premium"));
             membershipType = this.input.nextLine();
             if(!(membershipType).equals("1") && !membershipType.equals("2")){
-                System.out.println("Enter a correct type please!");
+                System.out.println(ConsoleColors.applyColor(ConsoleColors.RED, "Enter a correct type please."));
                 continue;
             }
             break;
         }
         String payTime;
-        System.out.println("Would you like to pay now or later?\nPress 1 to pay now (" + Integer.parseInt(membershipType)*500 + "PKR )\tPress 2 to pay later");
+        System.out.println(ConsoleColors.applyColor(ConsoleColors.CYAN, "Would you like to pay now or later?\nPress 1 to pay now (" + Integer.parseInt(membershipType)*500 + "PKR )\tPress 2 to pay later"));
         while (true) { 
             payTime = input.nextLine();
             if(!"1".equals(payTime) && !"2".equals(payTime)){
@@ -541,6 +587,7 @@ public class ConsoleUI {
         newMember.setMemberFeesDue(memberFeesDue);
         newMember.setMemberHasPaid(memberHasPaid);
         newMember.setMemberID(memberID);
+        System.out.println(ConsoleColors.applyBoldColor(ConsoleColors.GREEN, "Successfully registered " + newMember.getMemberName() + " with ID: " + newMember.getMemberID() + "!"));
         return newMember;
     }
 

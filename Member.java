@@ -14,6 +14,9 @@ public class Member {
     int memberCaloriesBurnt;
     int memberHoursSpent;
 
+
+    boolean activeStatus;
+    int lastActivityTimeStamp;
     // Constructor
     public Member(String memberName, String memberContactNumber, String memberEmailID, String membershipType){
         this.memberName = memberName;
@@ -23,8 +26,16 @@ public class Member {
         this.memberFeesDue = 0;
         this.memberCaloriesBurnt = 0;
         this.memberHoursSpent = 0;
+        this.activeStatus = false;
+        this.lastActivityTimeStamp = 0;
     }
     // Getters
+    public boolean getActiveStatus(){
+        return this.activeStatus;
+    }
+    public int getLastAcitivityTimestamp(){
+        return this.lastActivityTimeStamp;
+    }
     public int getMemberID(){
         return this.memberID;
     }
@@ -54,7 +65,12 @@ public class Member {
     }
 
     // Setters
-
+    public void setActive(boolean status){
+        this.activeStatus = status;
+    }
+    public void setLastActivityTimestamp(int timeStamp){
+        this.lastActivityTimeStamp = timeStamp;
+    }
     public void setMemberID(int memberID){
         this.memberID = memberID;
     }
@@ -80,7 +96,7 @@ public class Member {
     public static Member fromCsvString(String line){  // Static method that basically reads a CSV line and creates a member with those specific details and returns it to the calling method
         
         String[] memberDetails = line.split(",");
-        if(line.length()<8){
+        if(line.length()<12){
             System.out.println("Error in the CSV Database");
             return null;
         }
@@ -93,12 +109,18 @@ public class Member {
         boolean memberHasPaid = Boolean.parseBoolean(memberDetails[6]);
         int memberCaloriesBurnt = Integer.parseInt(memberDetails[7]);
         int memberHoursSpent = Integer.parseInt(memberDetails[8]);
+        boolean memberActiveStatus = Boolean.getBoolean(memberDetails[9]);
+        int lastActivityTimeStamp = Integer.parseInt(memberDetails[10]);
+
         Member member = new Member(memberName, memberContactNumber, memberEmailID, membershipType);
         member.setMemberID(memberID);
         member.setMemberFeesDue(memberFeesDue);
         member.setMemberHasPaid(memberHasPaid);
         member.setMemberCalories(memberCaloriesBurnt);
         member.setMemberHoursSpent(memberHoursSpent);
+
+        member.setActive(memberActiveStatus);
+        member.setLastActivityTimestamp(lastActivityTimeStamp);
         return member;
     }
     public static String fromStringCsv(Member member){ // Static method that receives a member type object and converts its properties to CSV
@@ -106,7 +128,7 @@ public class Member {
             System.out.println("Error in entered details!");
             return null;
         }
-        return String.join(",", String.valueOf(member.getMemberID()),member.getMemberName(), String.valueOf(member.getMemberContactNumber()),member.getMemberEmailID(),member.getMembershipType(),String.valueOf(member.getMemberFeesDue()), String.valueOf(member.getMemberHasPaid()), String.valueOf(member.getMemberCaloriesBurnt()) , String.valueOf(member.getMemberHoursSpent()) );
+        return String.join(",", String.valueOf(member.getMemberID()),member.getMemberName(), String.valueOf(member.getMemberContactNumber()),member.getMemberEmailID(),member.getMembershipType(),String.valueOf(member.getMemberFeesDue()), String.valueOf(member.getMemberHasPaid()), String.valueOf(member.getMemberCaloriesBurnt()) , String.valueOf(member.getMemberHoursSpent()), String.valueOf(member.getActiveStatus()),String.valueOf(member.lastActivityTimeStamp) );
 
     }
     /*String memberName 0; 
