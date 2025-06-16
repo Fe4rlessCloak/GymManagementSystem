@@ -55,7 +55,35 @@ public class DataManager {
         return null;
     }
 
-
+    public List<Member> filterMembers(char filterType, String userID, String userName, String subscriptionType, String feesDue, String paidStatus, String caloriesBurnt, String minutesSpent){
+        List<Member> filterList = new ArrayList<>();
+        switch(filterType){
+            case '1' -> {
+                for(Member member : members){
+                    if(member.getMemberID()==Integer.parseInt(userID)){
+                        filterList.add(member);
+                    }
+                }
+            }
+            case '2' -> {
+                for(Member member : members){
+                    String lowerCaseUserName = member.getMemberName().toLowerCase();
+                    String lowerCaseSearchName = userName.toLowerCase();
+                    if(lowerCaseUserName.contains(lowerCaseSearchName)){
+                        filterList.add(member);
+                    }
+                }
+            }
+            case '3' -> {
+                for(Member member : members){
+                    if(member.getMembershipType().equals(subscriptionType)){
+                        filterList.add(member);
+                    }
+                }
+            }
+        }
+        return filterList;
+    }
     public void loadEmployees(){
         try {
             employees.clear();

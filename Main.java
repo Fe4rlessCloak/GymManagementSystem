@@ -31,6 +31,15 @@ public class Main{
                 } 
             }else if(userChoice==2){ // Employee, in Progress
                 boolean employeeLoginStatus = CUI.employeeLogin(DM); 
+                if(employeeLoginStatus==true){
+                    int employeeChoice = CUI.employeeMenu();
+                    switch(employeeChoice){
+                        case 1 -> {
+                            CUI.displayAllMembersTable(DM);
+                            CUI.menuForManagingMembers(DM);
+                        }
+                    }
+                }
             }
         }
         

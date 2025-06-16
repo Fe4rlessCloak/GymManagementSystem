@@ -12,6 +12,25 @@ public class ConsoleUI {
         
     }
 
+    public int employeeMenu() {
+        String employeeChoice;
+        System.out.println("What do you wish to perform?");
+        System.out.println("1) Manage members");
+        System.out.println("2) See gym inventory");
+        System.out.println("3) Financial situation");
+
+        while (true) {
+            System.out.print("Enter a choice: ");
+            employeeChoice = this.input.nextLine();
+
+            if (employeeChoice.equals("1") || employeeChoice.equals("2") || employeeChoice.equals("3")) {
+                break;
+            }
+            System.out.println("Kindly enter an integer value (1, 2, or 3)");
+            this.input.nextLine(); 
+        }
+        return Integer.parseInt(employeeChoice);
+    }
 
     
     public int userChoice(){
@@ -107,6 +126,7 @@ public class ConsoleUI {
                 break;
             } catch (InputMismatchException e) {
                 System.out.println("Kindly enter an integer value");
+                this.input.nextLine();
             }
             
         }
@@ -124,8 +144,125 @@ public class ConsoleUI {
         
         
     }
-    
 
+    public void menuForManagingMembers(DataManager DM){
+        System.out.println("Managing menu\n1) Search by ID\n2) Filter by name\n3) Filter by subscription type\n4) Filter by fees due\n5) Filter by paid status\n6) Filter by calories burnt\n7) Filter by minutes spent this week\n8) Delete Member");
+        String managingMemberChoice;
+        while(true){
+            managingMemberChoice = this.input.nextLine();
+            if(managingMemberChoice.equals("1") || managingMemberChoice.equals("2") || managingMemberChoice.equals("3") || managingMemberChoice.equals("4") || managingMemberChoice.equals("5") || managingMemberChoice.equals("6") || managingMemberChoice.equals("7") || managingMemberChoice.equals("8")){
+                break;
+            }
+            System.out.println("Enter a valid input please!");
+        }
+        List<Member> filterList = new ArrayList<>();
+        switch(managingMemberChoice.charAt(0)){
+            case '1' -> {
+                System.out.println("Enter the ID you wish to search:");
+                int memberSearchID;
+                while (true) { 
+                    try {
+                        memberSearchID = this.input.nextInt();
+                        this.input.nextLine();
+                        break;
+                    }catch (InputMismatchException e) {
+                        System.out.println("Invalid input");
+                        
+                    }
+                    
+                }
+
+                filterList = DM.filterMembers(managingMemberChoice.charAt(0), String.valueOf(memberSearchID), null, null, null, null, null, null);
+                printTable(filterList);
+            }
+            case '2' -> {
+                System.out.println("Enter the name you wish to filter by:");
+                String membersearchName = this.input.nextLine();
+                filterList = DM.filterMembers(managingMemberChoice.charAt(0), null, membersearchName, null, null, null, null, null);
+                printTable(filterList);
+            }
+            case '3' -> {
+                System.out.println("Enter the subscription type you wish to filter by:1) Standard\t2) Premium");
+                String memberSubscriptionType;
+                while (true) { 
+                    memberSubscriptionType = this.input.nextLine();
+                    if(memberSubscriptionType.equals("1") || memberSubscriptionType.equals("2")){
+                        break;
+                    }
+                    System.out.println("Invalid input");
+                }
+                filterList = DM.filterMembers(managingMemberChoice.charAt(0), null, null, memberSubscriptionType, null, null, null, null);
+                printTable(filterList);
+            }
+            case '4' -> {
+                System.out.println("Enter the value for due fees, above which you wish to show users");
+                int feesDue;
+                while (true) { 
+                    try {
+                        feesDue = this.input.nextInt();
+                        this.input.nextLine();
+                        break;
+                    }catch (InputMismatchException e) {
+                        System.out.println("Invalid input");
+                        
+                    }
+                    
+                }
+            }
+        }
+
+    }
+    public void printTable(List<Member> allMembers){
+        int idWidth = 5;
+        int nameWidth = 20;
+        int typeWidth = 15;
+        int feesWidth = 10;
+        int paidWidth = 8;
+        int caloriesWidth = 12;
+        int hoursWidth = 10;
+
+        // Print table header
+        String headerFormat = "| %-" + idWidth + "s | %-" + nameWidth + "s | %-" + typeWidth + "s | %" + feesWidth + "s | %-" + paidWidth + "s | %" + caloriesWidth + "s | %" + hoursWidth + "s |%n";
+        String separator = "+-------+" + "-".repeat(nameWidth + 2) + "+" + "-".repeat(typeWidth + 2) + "+" + "-".repeat(feesWidth + 2) + "+" + "-".repeat(paidWidth + 2) + "+" + "-".repeat(caloriesWidth + 2) + "+" + "-".repeat(hoursWidth + 2) + "+%n";
+
+        System.out.printf(separator);
+        System.out.printf(headerFormat, "ID", "Name", "Type", "Fees Due", "Paid?", "Calories", "Minutes");
+        System.out.printf(separator);
+
+        // Print each member's data
+        for (Member member : allMembers) {
+            System.out.printf(
+                headerFormat,
+                String.valueOf(member.getMemberID()),
+                truncateString(member.getMemberName(), nameWidth),
+                truncateString(member.getMembershipType(), typeWidth),
+                String.valueOf(member.getMemberFeesDue()),
+                (member.getMemberHasPaid() ? "Yes" : "No"), // Display "Yes" or "No"
+                String.valueOf(member.getMemberCaloriesBurnt()),
+                String.valueOf(member.getMemberHoursSpent())
+            );
+        }
+        System.out.printf(separator);
+    }
+
+    public void displayAllMembersTable(DataManager DM){
+        List<Member> allMembers = DM.members;
+        if(allMembers.isEmpty()){
+            System.out.println("No members to display");
+        }
+        printTable(allMembers);
+        return;
+        
+    }
+    private String truncateString(String text, int maxWidth) {
+        if (text == null) {
+            return "";
+        }
+        if (text.length() > maxWidth) {
+            return text.substring(0, maxWidth - 3) + "..."; // Truncate and add ellipsis
+        }
+        return text;
+    }
 
 
     public void simulateWorkout(DataManager DM){
