@@ -55,6 +55,16 @@ public class DataManager {
         return null;
     }
 
+    public void deleteMember(int userID){
+        for(Member member : members){
+            if(member.getMemberID()==(userID)){
+                members.remove(member);
+                break;
+            }
+            updateMembers();
+        }
+    }
+
     public List<Member> filterMembers(char filterType, String userID, String userName, String subscriptionType, String feesDue, String paidStatus, String caloriesBurnt, String minutesSpent){
         List<Member> filterList = new ArrayList<>();
         switch(filterType){
@@ -77,6 +87,41 @@ public class DataManager {
             case '3' -> {
                 for(Member member : members){
                     if(member.getMembershipType().equals(subscriptionType)){
+                        filterList.add(member);
+                    }
+                }
+            }
+            case '4' -> {
+                for(Member member : members){
+                    if(member.getMemberFeesDue()>Integer.parseInt(feesDue)){
+                        filterList.add(member);
+                    }
+                }
+            }
+            case '5' -> {
+                for(Member member : members){
+                    if(paidStatus.equals("1")){
+                        if(member.getMemberHasPaid()==true){
+                         filterList.add(member);
+                        }
+                    }else if(paidStatus.equals("2")){
+                        if(member.getMemberHasPaid()==false){
+                         filterList.add(member);
+                        }
+                    }
+                    
+                }
+            }
+            case '6' -> {
+                for(Member member : members){
+                    if(member.getMemberCaloriesBurnt()>Integer.parseInt(caloriesBurnt)){
+                        filterList.add(member);
+                    }
+                }
+            }
+            case '7' -> {
+                for(Member member : members){
+                    if(member.getMemberHoursSpent()>Integer.parseInt(minutesSpent)){
                         filterList.add(member);
                     }
                 }

@@ -12,11 +12,12 @@ public class Main{
         List<Member> memberList = DM.returnMemberList(); // Stores all existing members in a list
         ConsoleUI CUI = new ConsoleUI();
 
-        outerLoop: while (true) { // outerLoop is just used to reference to this part
+        loop: while (true) { // outerLoop is just used to reference to this part
             int userChoice = CUI.userChoice();
             if(userChoice==1){ // Member
-                int memberChoice = CUI.memberChoice();
-                switch (memberChoice) {
+                memberLoop: while (true) { 
+                    int memberChoice = CUI.memberChoice();
+                    switch (memberChoice) {
                     case 1 -> { 
                         Member member = CUI.getMemberDetails(DM.generateUserID()); // Passes the userID to Console UI to generate a new Member type object from user inputs
                         DM.saveMember(Member.fromStringCsv(member)); // Use the Data Manager's saveMember method to convert all properties of this member to CSV-style, and append it to the end of the CSV file
@@ -26,20 +27,30 @@ public class Main{
                         CUI.simulateWorkout(DM);
                     }
                     case 4 -> {
-                        break;
+                        break memberLoop;
                     }
-                } 
+                }
+            } 
             }else if(userChoice==2){ // Employee, in Progress
                 boolean employeeLoginStatus = CUI.employeeLogin(DM); 
                 if(employeeLoginStatus==true){
-                    int employeeChoice = CUI.employeeMenu();
-                    switch(employeeChoice){
-                        case 1 -> {
-                            CUI.displayAllMembersTable(DM);
-                            CUI.menuForManagingMembers(DM);
+                    employeeLoop: while(true){
+                        int employeeChoice = CUI.employeeMenu();
+                        switch(employeeChoice){
+                            case 0 -> {
+                                break employeeLoop;
+                            }
+                            case 1 -> {
+                                CUI.displayAllMembersTable(DM);
+                                CUI.menuForManagingMembers(DM);
+                            }
                         }
                     }
+                    
                 }
+            }
+            if(userChoice==3){
+                break;
             }
         }
         
