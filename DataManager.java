@@ -55,14 +55,15 @@ public class DataManager {
         return null;
     }
 
-    public void deleteMember(int userID){
+    public boolean deleteMember(int userID){
         for(Member member : members){
             if(member.getMemberID()==(userID)){
                 members.remove(member);
-                break;
+                updateMembers();
+                return true;
             }
-            updateMembers();
         }
+        return false;
     }
 
     public List<Member> filterMembers(char filterType, String userID, String userName, String subscriptionType, String feesDue, String paidStatus, String caloriesBurnt, String minutesSpent){

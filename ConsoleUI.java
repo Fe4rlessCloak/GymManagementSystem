@@ -42,7 +42,7 @@ public class ConsoleUI {
                 }
                 System.out.println("Kindly select a valid option!");
             } catch (InputMismatchException e) {
-                System.out.println(ConsoleColors.applyColor(ConsoleColors.RED, "Invalid input. Please enter a number (1 or 2)."));
+                System.out.println(ConsoleColors.applyColor(ConsoleColors.RED, "Invalid input. Please enter a number (1,2 or 3)."));
                 this.input.nextLine();
             }
         }
@@ -61,7 +61,7 @@ public class ConsoleUI {
         System.out.println(ConsoleColors.applyBoldColor(ConsoleColors.PURPLE, "--------------------------"));
 
         while (true) {
-            System.out.print(ConsoleColors.applyColor(ConsoleColors.YELLOW, "Enter your choice (1-3 or 0 to Exit): "));
+            System.out.print(ConsoleColors.applyColor(ConsoleColors.YELLOW, "Enter your choice (1-2 or 0 to Exit): "));
             employeeChoice = this.input.nextLine();
 
             if (employeeChoice.equals("1") || employeeChoice.equals("2") || employeeChoice.equals("0")) {
@@ -91,7 +91,7 @@ public class ConsoleUI {
                 }
                 System.out.println("Kindly select a valid option!");
             } catch (InputMismatchException e) {
-                System.out.println(ConsoleColors.applyColor(ConsoleColors.RED, "Invalid input. Please enter a number (1 or 2)."));
+                System.out.println(ConsoleColors.applyColor(ConsoleColors.RED, "Invalid input. Please enter a number (1, 2 or 3)."));
                 this.input.nextLine();
             }
             
@@ -382,8 +382,13 @@ public class ConsoleUI {
                     }
                     
                 }
-                DM.deleteMember(userID);
-                System.out.println("The requested user has succesfully been removed");
+                boolean memberDeleted = DM.deleteMember(userID);
+                if(memberDeleted==true){
+                    System.out.println("The requested user has succesfully been removed");
+                }else{
+                    System.out.println(ConsoleColors.applyColor(ConsoleColors.RED, "The requested user cannot be found"));
+                }
+                
                 printTable(DM.members);
 
             }
@@ -392,37 +397,43 @@ public class ConsoleUI {
     }
     
     public void printTable(List<Member> allMembers){
-        int idWidth = 5;
-        int nameWidth = 20;
-        int typeWidth = 15;
-        int feesWidth = 10;
-        int paidWidth = 8;
-        int caloriesWidth = 12;
-        int hoursWidth = 10;
-        int activeStatus = 7;
-        // Print table header
-        String headerFormat = "| %-" + idWidth + "s | %-" + nameWidth + "s | %-" + typeWidth + "s | %" + feesWidth + "s | %-" + paidWidth + "s | %" + caloriesWidth + "s | %" + hoursWidth + "s |%" + activeStatus + "s | %n";
-        String separator = "+-------+" + "-".repeat(nameWidth + 2) + "+" + "-".repeat(typeWidth + 2) + "+" + "-".repeat(feesWidth + 2) + "+" + "-".repeat(paidWidth + 2) + "+" + "-".repeat(caloriesWidth + 2) + "+" + "-".repeat(hoursWidth + 2) + "+" + "-".repeat(activeStatus+2) + "+%n";
+        if(allMembers.isEmpty()){
+            System.out.print(ConsoleColors.applyColor(ConsoleColors.RED, "The requested user(s) cannot be found"));
+        }else{
+            int idWidth = 5;
+            int nameWidth = 20;
+            int typeWidth = 15;
+            int feesWidth = 10;
+            int paidWidth = 8;
+            int caloriesWidth = 12;
+            int hoursWidth = 10;
+            int activeStatus = 7;
+            // Print table header
+            String headerFormat = "| %-" + idWidth + "s | %-" + nameWidth + "s | %-" + typeWidth + "s | %" + feesWidth + "s | %-" + paidWidth + "s | %" + caloriesWidth + "s | %" + hoursWidth + "s |%" + activeStatus + "s | %n";
+            String separator = "+-------+" + "-".repeat(nameWidth + 2) + "+" + "-".repeat(typeWidth + 2) + "+" + "-".repeat(feesWidth + 2) + "+" + "-".repeat(paidWidth + 2) + "+" + "-".repeat(caloriesWidth + 2) + "+" + "-".repeat(hoursWidth + 2) + "+" + "-".repeat(activeStatus+2) + "+%n";
 
-        System.out.printf(separator);
-        System.out.printf(headerFormat, "ID", "Name", "Type", "Fees Due", "Paid?", "Calories", "Minutes","Active");
-        System.out.printf(separator);
+            System.out.printf(separator);
+            System.out.printf(headerFormat, "ID", "Name", "Type", "Fees Due", "Paid?", "Calories", "Minutes","Active");
+            System.out.printf(separator);
 
-        // Print each member's data
-        for (Member member : allMembers) {
-            System.out.printf(
-                headerFormat,
-                String.valueOf(member.getMemberID()),
-                truncateString(member.getMemberName(), nameWidth),
-                truncateString(member.getMembershipType(), typeWidth),
-                String.valueOf(member.getMemberFeesDue()),
-                (member.getMemberHasPaid() ? "Yes" : "No"), // Display "Yes" or "No"
-                String.valueOf(member.getMemberCaloriesBurnt()),
-                String.valueOf(member.getMemberHoursSpent()),
-                String.valueOf(member.getActiveStatus())
-            );
+            // Print each member's data
+            for (Member member : allMembers) {
+                System.out.printf(
+                    headerFormat,
+                    String.valueOf(member.getMemberID()),
+                    truncateString(member.getMemberName(), nameWidth),
+                    truncateString(member.getMembershipType(), typeWidth),
+                    String.valueOf(member.getMemberFeesDue()),
+                    (member.getMemberHasPaid() ? "Yes" : "No"), // Display "Yes" or "No"
+                    String.valueOf(member.getMemberCaloriesBurnt()),
+                    String.valueOf(member.getMemberHoursSpent()),
+                    String.valueOf(member.getActiveStatus())
+                );
+            }
+            System.out.printf(separator);
+
         }
-        System.out.printf(separator);
+        
     }
 
     public void displayAllMembersTable(DataManager DM){
